@@ -1,0 +1,19 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "ncgrmm.github.io"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/ncgrmm
+format:
+  html:
+    theme:
+      - lux
+    css: styles.css
+
+
+

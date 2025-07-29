@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Latest Posts",
+    "section": "",
+    "text": "Welcome To My Blog\n\n\n\ntest\n\n\n\n\n\n\n\n\n\nJul 29, 2025\n\n\nNico Grimm\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is a test entry!"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "In the future, you will find an about text here but as you can see, I haven’t written it yet."
+  }
+]

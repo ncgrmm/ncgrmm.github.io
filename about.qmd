@@ -1,0 +1,11 @@
+---
+title: "About"
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/ncgrmm
+---
+
+In the future, you will find an about text here but as you can see, I haven't written it yet.

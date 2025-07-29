@@ -1,0 +1,7 @@
+---
+title: "Welcome To My Blog"
+author: "Nico Grimm"
+date: "2025-07-29"
+categories: [test]
+---
+This is a test entry!

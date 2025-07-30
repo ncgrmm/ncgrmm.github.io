@@ -9,7 +9,7 @@
 <meta name="author" content="Nico Grimm">
 <meta name="dcterms.date" content="2025-07-29">
 
-<title>Welcome To My Blog – ncgrmm.github.io</title>
+<title>Bayesian Inference and Factor Graphs – ncgrmm.github.io</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,11 +70,54 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -111,9 +154,10 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Welcome To My Blog</h1>
+      <h1 class="title">Bayesian Inference and Factor Graphs</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">test</div>
+                <div class="quarto-category">probabilistic-ml</div>
+                <div class="quarto-category">probability-theory</div>
               </div>
                   </div>
   </div>
@@ -142,7 +186,18 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#bayesian-inference-model" id="toc-bayesian-inference-model" class="nav-link" data-scroll-target="#bayesian-inference-model">Bayesian Inference Model</a></li>
+  <li><a href="#factor-graphs" id="toc-factor-graphs" class="nav-link" data-scroll-target="#factor-graphs">Factor Graphs</a></li>
+  <li><a href="#sum-product-algorithm" id="toc-sum-product-algorithm" class="nav-link" data-scroll-target="#sum-product-algorithm">Sum-Product-Algorithm</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -150,9 +205,28 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is a test entry!</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+</section>
+<section id="bayesian-inference-model" class="level2">
+<h2 class="anchored" data-anchor-id="bayesian-inference-model">Bayesian Inference Model</h2>
+<p>Derived from a fundamental result in probability theory, the <em>Bayesian Inference Model</em> is one of the basic concepts in probabilistic machine learning. It represents the elemental idea of updating prior beliefs over model parameters through data. <span id="eq-bayes"><span class="math display"> p(B \: \vert \: A) = \frac{p(A \: \vert \: B)\cdot p(B)}{p(A)}  \tag{1}</span></span> In machine learning, we typically have a model which can be specified by some set of parameters <span class="math inline">\mathbf{\Phi}</span> deal with training data <span class="math inline">\mathcal{D}</span>. Usually, the parameters are directly updated by optimizing a given metric on the training data, e.g.&nbsp;minimizing a loss function. However, in this setting we are specifiying a so-called <em>prior distribution</em> over <span class="math inline">\mathbf{\Phi}</span> and update the distribution through training. Not only does this allow to incorporate assumptions over possibly important model parameters, but also captures the model’s uncertainty of the weight’s values after training and makes it possible to compute the uncertainty of predictions.</p>
+<p>Starting off with <em>Bayes’ Rule</em> (see <a href="#eq-bayes" class="quarto-xref">Equation&nbsp;1</a>), which relates the probability of <span class="math inline">B</span> to the probability of <span class="math inline">B</span> given <span class="math inline">A</span>. By replacing <span class="math inline">B</span> with <span class="math inline">\mathbf{\Phi}</span> and <span class="math inline">A</span> with <span class="math inline">\mathcal{D}</span> we end up with the basic formula of <em>Bayesian Inference</em>: <span class="math display">p(\mathbf{\Phi} \: \vert \: \mathcal{D}) \propto p(\mathcal{D} \: \vert \: \mathbf{\Phi}) \cdot p(\mathbf{\Phi})</span> This is exactly the tool to achieve what was proposed earlier. From the prior belief over parameters <span class="math inline">p(\mathbf{\Phi})</span> we can obtain an updated distribution after seeing the data <span class="math inline">p(\mathbf{\Phi} \: \vert \: \mathcal{D})</span>, called <em>posterior distribution</em>, by multiplying with <span class="math inline">p(\mathcal{D} \: \vert \: \mathbf{\Phi})</span>. This term is called <em>likelihood</em> and is very important. It is the probability of the training data having been generated by the current parameter values. It basically represents the actual model in the equation, as it describes the probability of the model output being the target value given the current parameter values.</p>
+<p>Now what about <span class="math inline">p(\mathcal{D})</span>? This term is called <em>model evidence</em> and essentially captures to which extent the proposed model, including it’s prior assumptions, is capable of fitting the data, because in order to calculate it, we need to integrate the product of prior and likelihood over all possible parameter values. In practice, it is often ommited, because it is</p>
+<ul>
+<li>typically very hard to compute exactly</li>
+<li>constant for a given model</li>
+<li>unnecessary for parameter estimation of the posterior</li>
+</ul>
+</section>
+<section id="factor-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="factor-graphs">Factor Graphs</h2>
+</section>
+<section id="sum-product-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="sum-product-algorithm">Sum-Product-Algorithm</h2>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
